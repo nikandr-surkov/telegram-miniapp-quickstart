@@ -183,6 +183,11 @@ export default function Home() {
     }
   }
 
+  const formatNumber = (num: number) => {
+    // This ensures consistent formatting regardless of locale
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
@@ -205,7 +210,7 @@ export default function Home() {
           </div>
           <p className="text-sm text-white/80 mb-1">Your Balance</p>
           <div className="text-4xl font-bold text-white mb-1">
-            {points.toLocaleString()}
+            {formatNumber(points)}
           </div>
           <p className="text-sm text-white/60">points</p>
         </div>
@@ -220,10 +225,10 @@ export default function Home() {
             onClick={claimDaily}
             disabled={claiming || !canClaim}
             className={`w-full py-4 rounded-xl font-medium transition-all transform ${!canClaim
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : claiming
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:cursor-pointer active:scale-[0.98] shadow-lg shadow-green-500/25'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : claiming
+                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:cursor-pointer active:scale-[0.98] shadow-lg shadow-green-500/25'
               }`}
           >
             {claiming ? (
@@ -286,7 +291,7 @@ export default function Home() {
                     </div>
                     <div className="text-left">
                       <div className="font-semibold text-gray-900">
-                        {pack.points.toLocaleString()} points
+                        {formatNumber(pack.points)} points
                       </div>
                       <div className="text-sm text-gray-500">
                         {pack.stars} Stars
