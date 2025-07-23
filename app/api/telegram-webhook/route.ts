@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
 
         // Handle /help command
         if (update.message?.text === '/help') {
-            await sendTelegramMessage(
+            const result = await sendTelegramMessage(
                 update.message.chat.id,
                 '❓ *How to Play*\n\n' +
                 '1️⃣ Open the game from the button\n' +
@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
                 '*Commands:*\n' +
                 '/start - Start the game\n' +
                 '/help - Show this help\n' +
-                '/refund RECEIPT_ID - Refund a payment',
+                '/refund RECEIPT\\_ID - Refund a payment',  // Escaped underscore
                 { parse_mode: 'Markdown' }
             )
         }
@@ -173,7 +173,7 @@ export async function POST(req: NextRequest) {
 async function sendTelegramMessage(chatId: number, text: string, extra?: any) {
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!
 
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -182,4 +182,12 @@ async function sendTelegramMessage(chatId: number, text: string, extra?: any) {
             ...extra
         })
     })
+
+    const data = await response.json()
+
+    if (!data.ok) {
+        console.error('Telegram API error:', data)
+    }
+
+    return data
 }
